@@ -13,7 +13,4 @@ if (!empty($_GET['nome']) && !empty($_GET['idade'])) {
   $sql->execute();
 }
 
-
 header("Location: index.php");
-
-?>

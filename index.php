@@ -22,35 +22,23 @@ $dados = $sql->fetchAll(PDO::FETCH_ASSOC);
 $contMaiorIdade = 0;
 $contMenorIdade = 0;
 
-$maiorIdade = 0;
-$maiorIdadeNome = "";
-
-$menorIdade = PHP_INT_MAX;
-$menorIdadeNome = "";
-
-foreach ($dados as $key => $linha) {
+foreach ($dados as $linha) {
   $idade = $linha['idade'];
 
-  // Esta condicional armazena a maior idade da lista
-  if ($idade > $maiorIdade) {
-    $maiorIdade = $idade;
-    $maiorIdadeNome = $linha['nome'];
-  }
-
-  // Esta condicional armazena a menor idade da lista
-  if ($idade < $menorIdade) {
-    $menorIdade = $idade;
-    $menorIdadeNome = $linha['nome'];
-  }
-
-
-  if($linha['idade'] >= 18) {
-   $contMaiorIdade++; 
+  if ($idade >= 18) {
+    $contMaiorIdade++;
   } else {
     $contMenorIdade++;
   }
 }
 
+$sql = "SELECT 
+          nome, MAX(idade) AS idade
+        FROM 
+          pessoas";
+$sql = $pdo->prepare($sql);
+$sql->execute();
+$pessoaMaisVelha = $sql->fetch(PDO::FETCH_ASSOC);
 
 ?>
 
@@ -74,8 +62,7 @@ foreach ($dados as $key => $linha) {
   <ul>
     <li><?=$contMaiorIdade?> pessoas são maiores de idade.</li>
     <li><?=$contMenorIdade?> pessoas são menores de idade.</li>
-    <li><?=$maiorIdadeNome?> é a pessoa mais velha, com <?=$maiorIdade?> anos.</li>
-    <li><?=$menorIdadeNome?> é a pessoa mais nova, com <?=$menorIdade?> anos.</li>
+    <li><?=$pessoaMaisVelha['nome']?> é a pessoa mais velha, com <?=$pessoaMaisVelha['idade']?> anos.</li>
   </ul>
 </body>
 
